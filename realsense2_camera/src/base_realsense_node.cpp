@@ -194,9 +194,12 @@ void BaseRealSenseNode::publishTopics()
     setupStreams();
     SetBaseStream();
     registerAutoExposureROIOptions(_node_handle);
-    publishStaticTransforms();
+    if (_pub_static_tf) {
+        publishStaticTransforms();
+    }
     publishIntrinsics();
     startMonitoring();
+
     ROS_INFO_STREAM("RealSense Node Is Up!");
 }
 
@@ -526,6 +529,7 @@ void BaseRealSenseNode::getParameters()
 
     _pnh.param("align_depth", _align_depth, ALIGN_DEPTH);
     _pnh.param("enable_pointcloud", _pointcloud, POINTCLOUD);
+    _pnh.param("publish_static_tf", _pub_static_tf, true);
     std::string pc_texture_stream("");
     int pc_texture_idx;
     _pnh.param("pointcloud_texture_stream", pc_texture_stream, std::string("RS2_STREAM_COLOR"));
