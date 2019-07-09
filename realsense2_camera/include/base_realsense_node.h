@@ -16,6 +16,7 @@
 #include <tf/transform_broadcaster.h>
 #include <tf2_ros/static_transform_broadcaster.h>
 #include <condition_variable>
+#include <std_srvs/Trigger.h>
 
 #include <queue>
 #include <mutex>
@@ -207,6 +208,8 @@ namespace realsense2_camera
 
         static std::string getNamespaceStr();
         void getParameters();
+        void getSerial(std_srvs::Trigger::Request &req,
+                       std_srvs::Trigger::Response &res);
         void setupDevice();
         void setupErrorCallback();
         void setupPublishers();
