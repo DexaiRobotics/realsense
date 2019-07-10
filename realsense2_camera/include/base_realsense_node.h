@@ -335,6 +335,8 @@ namespace realsense2_camera
         mutable std::condition_variable _cv;
 
         stream_index_pair _base_stream;
+        ros::ServiceServer _get_serial_service;
+
         const std::string _namespace;
 
     };//end class
