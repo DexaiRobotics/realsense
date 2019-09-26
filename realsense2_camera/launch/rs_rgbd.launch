@@ -44,6 +44,7 @@ Processing enabled by this node:
   <arg name="tf_prefix"           default="$(arg camera)"/>
   <arg name="external_manager"    default="false"/>
   <arg name="manager"             default="realsense2_camera_manager"/>
+  <arg name="initial_reset"       default="false"/>
 
   <!-- Camera device specific arguments -->
 
@@ -79,6 +80,7 @@ Processing enabled by this node:
   <arg name="enable_pointcloud"   default="false"/>
   <arg name="enable_sync"         default="true"/>
   <arg name="align_depth"         default="true"/>
+  <arg name="filters"             default=""/>
   <arg name="publish_static_tf"   default="true"/>
 
   <!-- rgbd_launch specific arguments -->
@@ -118,6 +120,7 @@ Processing enabled by this node:
       <arg name="tf_prefix"                value="$(arg tf_prefix)"/>
       <arg name="serial_no"                value="$(arg serial_no)"/>
       <arg name="json_file_path"           value="$(arg json_file_path)"/>
+      <arg name="initial_reset"            value="$(arg initial_reset)"/>
 
       <arg name="enable_pointcloud"        value="$(arg enable_pointcloud)"/>
       <arg name="enable_sync"              value="$(arg enable_sync)"/>
