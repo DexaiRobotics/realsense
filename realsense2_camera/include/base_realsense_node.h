@@ -323,6 +323,9 @@ namespace realsense2_camera
 
         const std::string _namespace;
 
+        sensor_msgs::PointCloud2 _msg_pointcloud;
+        std::vector< unsigned int > _valid_pc_indices;
+
     };//end class
 
 }
