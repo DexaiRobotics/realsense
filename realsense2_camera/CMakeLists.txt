@@ -7,6 +7,7 @@ option(SET_USER_BREAK_AT_STARTUP "Set user wait point in startup (for debug)" OF
 
 find_package(catkin REQUIRED COMPONENTS
     message_generation
+    nav_msgs
     roscpp
     sensor_msgs
     std_msgs
@@ -33,12 +34,17 @@ if(SET_USER_BREAK_AT_STARTUP)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBPDEBUG")
 endif()
 
-find_package(realsense2)
+find_package(realsense2 2.36.0)
 if(NOT realsense2_FOUND)
     message(FATAL_ERROR "\n\n Intel RealSense SDK 2.0 is missing, please install it from https://github.com/IntelRealSense/librealsense/releases\n\n")
 endif()
 
-if (CMAKE_BUILD_TYPE EQUAL "RELEASE")
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
+
+string(TOUPPER "${CMAKE_BUILD_TYPE}" uppercase_CMAKE_BUILD_TYPE)
+if (${uppercase_CMAKE_BUILD_TYPE} STREQUAL "RELEASE")
     message(STATUS "Create Release Build.")
     set(CMAKE_CXX_FLAGS "-O2 ${CMAKE_CXX_FLAGS}")
 else()
@@ -59,10 +65,11 @@ generate_messages(
     std_msgs
     )
 
+set(CMAKE_NO_SYSTEM_FROM_IMPORTED true)
 include_directories(
     include
+    ${realsense2_INCLUDE_DIR}
     ${catkin_INCLUDE_DIRS}
-    ${realsense_INCLUDE_DIR}
     )
 
 # RealSense ROS Node
@@ -73,23 +80,24 @@ catkin_package(
     cv_bridge
     image_transport
     ddynamic_reconfigure
+    nav_msgs
     )
 
 add_library(${PROJECT_NAME}
     include/constants.h
     include/realsense_node_factory.h
     include/base_realsense_node.h
+    include/t265_realsense_node.h
     src/realsense_node_factory.cpp
     src/base_realsense_node.cpp
+    src/t265_realsense_node.cpp
     )
 
 add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
-add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}_gencfg)
-
 
 target_include_directories(${PROJECT_NAME}
-  PRIVATE ${realsense_INCLUDE_DIR})
+  PRIVATE ${realsense2_INCLUDE_DIR})
 
 target_link_libraries(${PROJECT_NAME}
     ${realsense2_LIBRARY}
@@ -123,3 +131,4 @@ install(DIRECTORY rviz/
 install(FILES nodelet_plugins.xml
     DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
     )
+
